@@ -20,7 +20,6 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   @override
   void initState() {
     super.initState();
-    print(initialDate.subtract(const Duration(days: 4383)));
     _setTextFieldDate(initialDate);
   }
 
