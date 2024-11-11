@@ -259,7 +259,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           },
           body: TabBarView(children: [
             GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               itemCount: 20,
               padding: EdgeInsets.zero,
