@@ -147,7 +147,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
         elevation: 20,
         shadowColor: Colors.black,
         height: 100,
