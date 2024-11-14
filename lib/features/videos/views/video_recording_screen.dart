@@ -8,8 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/videos/video_preview_screen.dart';
-import 'package:tiktok_clone/features/videos/widgets/flash_mode_button.dart';
+import 'package:tiktok_clone/features/videos/views/video_preview_screen.dart';
+import 'package:tiktok_clone/features/videos/views/widgets/flash_mode_button.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   static const String routeName = "postVideo";
@@ -154,8 +154,10 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   @override
   void dispose() {
     _progressAnimationController.dispose();
-    _cameraController.dispose();
     _buttonAnimationController.dispose();
+    if (!_noCamera) {
+      _cameraController.dispose();
+    }
     super.dispose();
   }
 
@@ -180,6 +182,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_noCamera) return;
     if (!_hasPermission) return;
     if (!_cameraController.value.isInitialized) return;
 
@@ -218,6 +221,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                 children: [
                   if (!_noCamera && _cameraController.value.isInitialized)
                     CameraPreview(_cameraController),
+                  const Positioned(
+                    top: Sizes.size40,
+                    left: Sizes.size12,
+                    child: CloseButton(
+                      color: Colors.white,
+                    ),
+                  ),
                   if (!_noCamera)
                     Positioned(
                       top: Sizes.size32,

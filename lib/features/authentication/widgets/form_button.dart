@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/utilities.dart';
 
 class FormButton extends StatelessWidget {
   const FormButton({
@@ -24,7 +24,7 @@ class FormButton extends StatelessWidget {
             Sizes.size5,
           ),
           color: disabled
-              ? isDarkMode(context)
+              ? darkModeConfig.value
                   ? Colors.grey.shade800
                   : Colors.grey.shade300
               : Theme.of(context).primaryColor,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/utilities.dart';
 
 class ActivityScreen extends StatefulWidget {
   static const String routeName = "activity";
@@ -90,7 +90,6 @@ class _ActivityScreenState extends State<ActivityScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = isDarkMode(context);
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -169,13 +168,15 @@ class _ActivityScreenState extends State<ActivityScreen>
                     leading: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: isDark
+                          color: darkModeConfig.value
                               ? Colors.grey.shade800
                               : Colors.grey.shade400,
                           width: Sizes.size1,
                         ),
                         shape: BoxShape.circle,
-                        color: isDark ? Colors.grey.shade800 : Colors.white,
+                        color: darkModeConfig.value
+                            ? Colors.grey.shade800
+                            : Colors.white,
                       ),
                       width: Sizes.size52,
                       child: const Center(
@@ -190,7 +191,8 @@ class _ActivityScreenState extends State<ActivityScreen>
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: Sizes.size16,
-                              color: isDark ? null : Colors.black),
+                              color:
+                                  darkModeConfig.value ? null : Colors.black),
                           children: [
                             const TextSpan(
                               text: "Upload longer videos",

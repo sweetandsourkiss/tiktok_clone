@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/common/widgets/main_navigation/main_navigation_screen.dart';
 import 'package:tiktok_clone/features/authentication/login_screen.dart';
@@ -6,10 +7,10 @@ import 'package:tiktok_clone/features/inbox/activity_screen.dart';
 import 'package:tiktok_clone/features/inbox/chat_detail_screen.dart';
 import 'package:tiktok_clone/features/inbox/chats_screen.dart';
 import 'package:tiktok_clone/features/onboarding/interests._screen.dart';
-import 'package:tiktok_clone/features/videos/video_recording_screen.dart';
+import 'package:tiktok_clone/features/videos/views/video_recording_screen.dart';
 
 final router = GoRouter(
-  initialLocation: "/inbox",
+  initialLocation: "/home",
   routes: [
     GoRoute(
       name: SignUpScreen.routeName,
@@ -61,7 +62,22 @@ final router = GoRouter(
     GoRoute(
       name: VideoRecordingScreen.routeName,
       path: VideoRecordingScreen.routeURL,
-      builder: (context, state) => const VideoRecordingScreen(),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        transitionDuration: const Duration(
+          milliseconds: 150,
+        ),
+        child: const VideoRecordingScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final position = Tween(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(animation);
+          return SlideTransition(
+            position: position,
+            child: child,
+          );
+        },
+      ),
     ),
   ],
 );

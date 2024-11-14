@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/utilities.dart';
 import 'package:go_router/go_router.dart';
 
 enum Direction { right, left }
@@ -111,7 +111,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-          color: isDarkMode(context) ? Colors.black : Colors.white,
+          color: darkModeConfig.value ? Colors.black : Colors.white,
           height: Sizes.size96,
           child: Padding(
             padding: const EdgeInsets.symmetric(

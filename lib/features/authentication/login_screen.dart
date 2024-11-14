@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/login_form_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
-import 'package:tiktok_clone/utilities.dart';
 
 class LogInScreen extends StatelessWidget {
   static String routeURL = "/login";
@@ -76,7 +76,7 @@ class LogInScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: isDarkMode(context) ? null : Colors.grey.shade50,
+        color: darkModeConfig.value ? null : Colors.grey.shade50,
         padding: const EdgeInsets.all(0),
         shadowColor: Colors.black,
         elevation: 2,

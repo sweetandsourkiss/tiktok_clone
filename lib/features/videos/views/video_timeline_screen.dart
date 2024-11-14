@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tiktok_clone/features/videos/widgets/video_post.dart';
+import 'package:tiktok_clone/features/videos/views/widgets/video_post.dart';
 
 class VideoTimelineScreen extends StatefulWidget {
   const VideoTimelineScreen({super.key});
@@ -30,11 +30,12 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   }
 
   void _onVideoFinished() {
-    return;
-    /* _pageController.nextPage(
+    // ??
+    _pageController.nextPage(
       duration: _scrollDuration,
       curve: _scrollCurve,
-    ); */
+    );
+    return;
   }
 
   @override

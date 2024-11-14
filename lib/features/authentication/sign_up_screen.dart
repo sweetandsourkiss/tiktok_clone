@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/username_screen.dart';
 import 'package:tiktok_clone/features/authentication/login_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
-import 'package:tiktok_clone/utilities.dart';
 
 class SignUpScreen extends StatelessWidget {
   static const routeURL = "/";
@@ -138,7 +138,7 @@ class SignUpScreen extends StatelessWidget {
           bottomNavigationBar: BottomAppBar(
             padding: const EdgeInsets.all(0),
             shadowColor: Colors.black,
-            color: isDarkMode(context) ? null : Colors.grey.shade50,
+            color: darkModeConfig.value ? null : Colors.grey.shade50,
             elevation: 2,
             child: Padding(
               padding: const EdgeInsets.symmetric(
