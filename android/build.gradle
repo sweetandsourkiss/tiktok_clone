@@ -1,7 +1,23 @@
+buildscript {
+    ext.kotlin_version = '1.8.0' // Kotlin 버전을 업데이트합니다. 필요에 따라 더 최신 버전을 사용할 수 있습니다.
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "11" // JVM 대상을 11로 변경
+        }
     }
 }
 
@@ -14,15 +30,15 @@ subprojects {
                 if (namespace == null) {
                     namespace project.group
                 }
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_11
+                    targetCompatibility JavaVersion.VERSION_11
+                }
             }
         }
     }
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
