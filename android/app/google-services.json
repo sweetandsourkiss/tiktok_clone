@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "582394959607",
+    "project_id": "tiktok-sask-project",
+    "storage_bucket": "tiktok-sask-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582394959607:android:a2f11bb9f97b3ef4a425f2",
+        "android_client_info": {
+          "package_name": "com.tiktoksaskproject.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx5JyAFxTaAFgDMeTA-KIYfs07OZVZmYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
