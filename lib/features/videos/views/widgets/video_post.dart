@@ -34,7 +34,7 @@ class VideoPostState extends ConsumerState<VideoPost>
 
   late final AnimationController _animationController;
 
-  bool _isPaused = false;
+  bool _isPaused = true;
   bool _isMuted = true;
 
   void _onVideoChange() {
@@ -56,6 +56,9 @@ class VideoPostState extends ConsumerState<VideoPost>
     }
     if (!mounted) return;
     _videoPlayerController.addListener(_onVideoChange);
+    if (ref.read(playbackConfigProvider).autoplay) {
+      _onTogglePause();
+    }
     setState(() {});
   }
 

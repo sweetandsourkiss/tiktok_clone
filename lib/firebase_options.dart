@@ -71,4 +71,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'tiktok-sask-project.firebasestorage.app',
     iosBundleId: 'com.example.tiktokClone',
   );
+
 }
