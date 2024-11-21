@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/users/view_models/bio_view_model.dart';
-import 'package:tiktok_clone/utilities.dart';
 
 class UserBioScreen extends ConsumerStatefulWidget {
   final String bio;

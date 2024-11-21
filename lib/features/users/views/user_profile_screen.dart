@@ -37,7 +37,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserBioScreen(bio: data.bio, link: data.link),
+        builder: (context) => UserBioScreen(
+          bio: data.bio,
+          link: data.link,
+        ),
       ),
     );
   }
