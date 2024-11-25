@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/models/video_model.dart';
 import 'package:tiktok_clone/features/videos/view_models/playback_config_vm.dart';
+import 'package:tiktok_clone/features/videos/view_models/video_post_view_model.dart';
 import 'package:tiktok_clone/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok_clone/features/videos/views/widgets/video_comments.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
@@ -13,12 +15,13 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
-
+  final VideoModel videoData;
   final int index;
 
   const VideoPost({
     super.key,
     required this.onVideoFinished,
+    required this.videoData,
     required this.index,
   });
 
@@ -29,13 +32,9 @@ class VideoPost extends ConsumerStatefulWidget {
 class VideoPostState extends ConsumerState<VideoPost>
     with SingleTickerProviderStateMixin {
   late final VideoPlayerController _videoPlayerController;
-
   final Duration _animationDuration = const Duration(milliseconds: 200);
-
   late final AnimationController _animationController;
-
   bool _isPaused = true;
-  bool _isMuted = true;
 
   void _onVideoChange() {
     if (_videoPlayerController.value.isInitialized) {
@@ -47,8 +46,9 @@ class VideoPostState extends ConsumerState<VideoPost>
   }
 
   void _initVideoPlayer() async {
-    _videoPlayerController =
-        VideoPlayerController.asset("assets/videos/video.mp4");
+    _videoPlayerController = VideoPlayerController.network(
+      widget.videoData.fileUrl,
+    );
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
     if (kIsWeb) {
@@ -119,17 +119,6 @@ class VideoPostState extends ConsumerState<VideoPost>
     });
   }
 
-  void _toggleMuted() {
-    _isMuted = !_isMuted;
-    if (_isMuted) {
-      _videoPlayerController.setVolume(0);
-    } else {
-      _videoPlayerController.setVolume(1);
-    }
-    print('toggled');
-    setState(() {});
-  }
-
   void _onCommentsTap(BuildContext context) async {
     if (_videoPlayerController.value.isPlaying) {
       _onTogglePause();
@@ -143,6 +132,10 @@ class VideoPostState extends ConsumerState<VideoPost>
     _onTogglePause();
   }
 
+  void _onLikeTap() {
+    ref.read(videoPostProvider(widget.videoData.id).notifier).likeVideo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
@@ -153,8 +146,9 @@ class VideoPostState extends ConsumerState<VideoPost>
           Positioned.fill(
             child: _videoPlayerController.value.isInitialized
                 ? VideoPlayer(_videoPlayerController)
-                : Container(
-                    color: Colors.black,
+                : Image.network(
+                    widget.videoData.thumbnailUrl,
+                    fit: BoxFit.cover,
                   ),
           ),
           Positioned.fill(
@@ -199,15 +193,15 @@ class VideoPostState extends ConsumerState<VideoPost>
               onPressed: _onPlaybackConfigChanged,
             ),
           ),
-          const Positioned(
+          Positioned(
             bottom: 20,
             left: 10,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "@니꼬",
-                  style: TextStyle(
+                  "@${widget.videoData.creator}",
+                  style: const TextStyle(
                     fontSize: Sizes.size20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -215,8 +209,8 @@ class VideoPostState extends ConsumerState<VideoPost>
                 ),
                 Gaps.v10,
                 Text(
-                  "This is my house in Thailand!!!",
-                  style: TextStyle(
+                  widget.videoData.description,
+                  style: const TextStyle(
                     fontSize: Sizes.size16,
                     color: Colors.white,
                   ),
@@ -229,25 +223,32 @@ class VideoPostState extends ConsumerState<VideoPost>
             right: 10,
             child: Column(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 25,
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
-                  foregroundImage: NetworkImage(
-                    "https://avatars.githubusercontent.com/u/3612017",
+                  foregroundImage: ResizeImage(
+                    NetworkImage(
+                      "https://firebasestorage.googleapis.com/v0/b/tiktok-sask-project.firebasestorage.app/o/avatars%2F${widget.videoData.creatorUid}?alt=media&token=a8f4c6f3-580f-4cb2-a598-a16a21f63d5b",
+                    ),
+                    width: 150,
+                    height: 150,
                   ),
-                  child: Text("니꼬"),
+                  child: Text(widget.videoData.creator),
                 ),
                 Gaps.v24,
-                VideoButton(
-                    icon: FontAwesomeIcons.solidHeart,
-                    text: S.of(context).likeCount(98798711111987)),
+                GestureDetector(
+                  onTap: _onLikeTap,
+                  child: VideoButton(
+                      icon: FontAwesomeIcons.solidHeart,
+                      text: S.of(context).likeCount(widget.videoData.likes)),
+                ),
                 Gaps.v24,
                 GestureDetector(
                   onTap: () => _onCommentsTap(context),
                   child: VideoButton(
                     icon: FontAwesomeIcons.solidComment,
-                    text: S.of(context).commentCount(65656),
+                    text: S.of(context).commentCount(widget.videoData.comments),
                   ),
                 ),
                 Gaps.v24,
