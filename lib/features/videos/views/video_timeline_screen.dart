@@ -43,8 +43,8 @@ class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
     super.dispose();
   }
 
-  Future<void> _onRefresh() {
-    return ref.watch(timelineProvider.notifier).refresh();
+  Future<void> _onRefresh() async {
+    await ref.watch(timelineProvider.notifier).refresh();
   }
 
   @override

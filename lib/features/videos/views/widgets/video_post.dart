@@ -35,6 +35,7 @@ class VideoPostState extends ConsumerState<VideoPost>
   final Duration _animationDuration = const Duration(milliseconds: 200);
   late final AnimationController _animationController;
   bool _isPaused = true;
+  bool _isLiked = false;
 
   void _onVideoChange() {
     if (_videoPlayerController.value.isInitialized) {
@@ -59,6 +60,9 @@ class VideoPostState extends ConsumerState<VideoPost>
     if (ref.read(playbackConfigProvider).autoplay) {
       _onTogglePause();
     }
+    _isLiked = await ref
+        .read(videoPostProvider(widget.videoData.id).notifier)
+        .didUserLikeVideo();
     setState(() {});
   }
 
@@ -134,6 +138,8 @@ class VideoPostState extends ConsumerState<VideoPost>
 
   void _onLikeTap() {
     ref.read(videoPostProvider(widget.videoData.id).notifier).likeVideo();
+    _isLiked = !_isLiked;
+    setState(() {});
   }
 
   @override
@@ -239,9 +245,23 @@ class VideoPostState extends ConsumerState<VideoPost>
                 Gaps.v24,
                 GestureDetector(
                   onTap: _onLikeTap,
-                  child: VideoButton(
-                      icon: FontAwesomeIcons.solidHeart,
-                      text: S.of(context).likeCount(widget.videoData.likes)),
+                  child: Column(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.solidHeart,
+                        color: _isLiked == true ? Colors.red : Colors.white,
+                        size: Sizes.size40,
+                      ),
+                      Gaps.v5,
+                      Text(
+                        S.of(context).likeCount(widget.videoData.likes),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Gaps.v24,
                 GestureDetector(
