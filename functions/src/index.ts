@@ -56,11 +56,14 @@ export const onLikeRemoved = functions.firestore.onDocumentDeleted("likes/{likeI
   db.collection("users").doc(userId).collection("likes").doc(videoId).delete();
 });
 
-export const onTextCreated = functions.firestore.onDocumentCreated("chat_rooms/{chatUid}", async (event) => {
-  const db = admin.firestore();
-  const uid = event.params.chatUid;
-  await db.collection("chat_rooms").doc(uid).update({
-    lastChat: event.data!.data().text,
-    lastChattedAt: Date.now(),
-  });
-});
+export const onTextCreated = functions.firestore.onDocumentCreated(
+  "chat_rooms/{chatUid}/texts/{textId}",
+  async (event) => {
+    const db = admin.firestore();
+    const uid = event.params.chatUid;
+    await db.collection("chat_rooms").doc(uid).update({
+      lastChat: event.data!.data().text,
+      lastChattedAt: Date.now(),
+    });
+  }
+);
