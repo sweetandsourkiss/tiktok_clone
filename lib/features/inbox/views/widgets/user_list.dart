@@ -4,7 +4,9 @@ import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/inbox/view_models/chat_room_view_model.dart';
+import 'package:tiktok_clone/features/inbox/views/chat_detail_screen.dart';
 import 'package:tiktok_clone/features/users/view_models/user_list_view_model.dart';
+import 'package:go_router/go_router.dart';
 
 class UserList extends ConsumerStatefulWidget {
   const UserList({super.key});
@@ -16,9 +18,12 @@ class UserList extends ConsumerStatefulWidget {
 class UserListState extends ConsumerState<UserList> {
   final ScrollController scrollController = ScrollController();
 
-  void _onUserTap(BuildContext context, String uid) {
-    ref.read(chatRoomProvider.notifier).makeRoom(uid);
+  void _onUserTap(BuildContext context, String uid, String name) async {
+    final url = await ref.read(chatRoomProvider.notifier).makeRoom(uid, name);
     Navigator.pop(context);
+    context.pushNamed(ChatDetailScreen.routeName, params: {
+      "chatId": url,
+    });
   }
 
   @override
@@ -56,7 +61,8 @@ class UserListState extends ConsumerState<UserList> {
                 ),
                 itemCount: data.length,
                 itemBuilder: (context, index) => GestureDetector(
-                  onTap: () => _onUserTap(context, data[index].uid),
+                  onTap: () =>
+                      _onUserTap(context, data[index].uid, data[index].name),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

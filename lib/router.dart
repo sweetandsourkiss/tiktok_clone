@@ -15,7 +15,7 @@ final routerProvider = Provider(
   (ref) {
     // ref.watch(authState);
     return GoRouter(
-      initialLocation: "/home",
+      initialLocation: "/inbox",
       redirect: (context, state) {
         final isLoggedIn = ref.read(authRepo).isLoggedIn;
         if (!isLoggedIn) {

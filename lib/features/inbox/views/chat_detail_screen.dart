@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
+import 'package:tiktok_clone/features/inbox/view_models/chat_detail_view_model.dart';
 import 'package:tiktok_clone/features/inbox/view_models/messages_view_model.dart';
 
 class ChatDetailScreen extends ConsumerStatefulWidget {
@@ -28,90 +29,102 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     if (text == "") {
       return;
     }
-    ref.read(messagesProvider.notifier).sendMessage(text);
+    ref.read(messagesProvider.notifier).sendMessage(widget.chatId, text);
     _editingController.text = "";
   }
 
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(messagesProvider).isLoading;
+    final userId = ref.read(authRepo).user!.uid;
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.grey.shade400,
-        title: ListTile(
-          contentPadding: EdgeInsets.zero,
-          horizontalTitleGap: Sizes.size8,
-          leading: Stack(
-            children: [
-              const CircleAvatar(
-                radius: Sizes.size24,
-                foregroundImage: NetworkImage(
-                  "https://avatars.githubusercontent.com/u/106135040?v=4",
-                ),
-                child: Text(
-                  "쌔콤",
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(
-                    Sizes.size3,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        Sizes.size96,
-                      ),
+        title: ref.watch(chatDetailProvider(widget.chatId)).when(
+          loading: () {
+            return const CircularProgressIndicator();
+          },
+          error: (error, stackTrace) {
+            return Text(error.toString());
+          },
+          data: (data) {
+            final isPersonA = userId == data.personAuid;
+            return ListTile(
+              contentPadding: EdgeInsets.zero,
+              horizontalTitleGap: Sizes.size8,
+              leading: Stack(
+                children: [
+                  CircleAvatar(
+                    radius: Sizes.size24,
+                    foregroundImage: NetworkImage(
+                      "https://firebasestorage.googleapis.com/v0/b/tiktok-sask-project.firebasestorage.app/o/avatars%2F${isPersonA ? data.personBuid : data.personAuid}?alt=media&token=a8f4c6f3-580f-4cb2-a598-a16a21f63d5b",
+                    ),
+                    child: Text(
+                      isPersonA ? data.personBname : data.personAname,
                     ),
                   ),
-                  child: Container(
-                    width: Sizes.size12,
-                    height: Sizes.size12,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          Sizes.size96,
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(
+                        Sizes.size3,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            Sizes.size96,
+                          ),
+                        ),
+                      ),
+                      child: Container(
+                        width: Sizes.size12,
+                        height: Sizes.size12,
+                        decoration: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              Sizes.size96,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
+                ],
+              ),
+              title: Text(
+                isPersonA ? data.personBname : data.personAname,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ],
-          ),
-          title: Text(
-            "쌔콤 (${widget.chatId})",
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          subtitle: Text(
-            "Active now",
-            style: TextStyle(
-              fontSize: Sizes.size12,
-              color: Colors.grey.shade500,
-            ),
-          ),
-          trailing: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FaIcon(
-                FontAwesomeIcons.flag,
-                size: Sizes.size20,
-                color: Colors.black,
+              subtitle: Text(
+                "Active now",
+                style: TextStyle(
+                  fontSize: Sizes.size12,
+                  color: Colors.grey.shade500,
+                ),
               ),
-              Gaps.h32,
-              FaIcon(
-                FontAwesomeIcons.ellipsis,
-                size: Sizes.size20,
-                color: Colors.black,
+              trailing: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.flag,
+                    size: Sizes.size20,
+                    color: Colors.black,
+                  ),
+                  Gaps.h32,
+                  FaIcon(
+                    FontAwesomeIcons.ellipsis,
+                    size: Sizes.size20,
+                    color: Colors.black,
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
       body: Stack(

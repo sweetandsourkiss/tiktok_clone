@@ -19,13 +19,11 @@ class SignupViewModel extends AsyncNotifier<void> {
     state = const AsyncValue.loading();
     final form = ref.read(signUpForm);
     final users = ref.read(usersProvider.notifier);
-    print(form);
     state = await AsyncValue.guard(() async {
       final userCredential = await _authRepo.emailSignUp(
         form['email'],
         form['password'],
       );
-      print(userCredential);
       await users.createProfile(userCredential, form);
     });
     if (state.hasError) {

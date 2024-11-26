@@ -6,7 +6,12 @@ class ChatRoomRepo {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<void> makeRoom(ChatRoomModel room) async {
-    await _db.collection('chat_rooms').add(room.toJson());
+    await _db.collection('chat_rooms').doc(room.uid).set(room.toJson());
+  }
+
+  Future<ChatRoomModel> getChatDetail(String uid) async {
+    final detail = await _db.collection("chat_rooms").doc(uid).get();
+    return ChatRoomModel.fromJson(detail.data()!);
   }
 
   Future<List<ChatRoomModel>> getChatList(String uid) async {
@@ -15,11 +20,11 @@ class ChatRoomRepo {
         .where(
           Filter.or(
             Filter(
-              'personA',
+              'personAuid',
               isEqualTo: uid,
             ),
             Filter(
-              'personB',
+              'personBuid',
               isEqualTo: uid,
             ),
           ),

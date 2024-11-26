@@ -4,6 +4,7 @@ class ChatRoomModel {
   final String personAname;
   final String personBuid;
   final String personBname;
+  final String lastChat;
   final int lastChattedAt;
 
   ChatRoomModel({
@@ -12,6 +13,7 @@ class ChatRoomModel {
     required this.personAname,
     required this.personBuid,
     required this.personBname,
+    required this.lastChat,
     required this.lastChattedAt,
   });
 
@@ -21,6 +23,7 @@ class ChatRoomModel {
         personAuid = json['personAuid'],
         personBuid = json['personBuid'],
         personBname = json['personBname'],
+        lastChat = json['lastChat'],
         lastChattedAt = json['lastChattedAt'];
 
   Map<String, dynamic> toJson() {
@@ -30,6 +33,7 @@ class ChatRoomModel {
       "personAname": personAname,
       "personBuid": personBuid,
       "personBname": personBname,
+      "lastChat": lastChat,
       "lastChattedAt": lastChattedAt,
     };
   }

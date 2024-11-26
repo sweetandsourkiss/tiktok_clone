@@ -13,7 +13,7 @@ class MessagesViewModel extends AsyncNotifier<void> {
     _repo = ref.read(messagesRepo);
   }
 
-  Future<void> sendMessage(String text) async {
+  Future<void> sendMessage(String uid, String text) async {
     final user = ref.read(authRepo).user;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(
@@ -23,7 +23,7 @@ class MessagesViewModel extends AsyncNotifier<void> {
           userId: user!.uid,
           createdAt: DateTime.now().millisecondsSinceEpoch,
         );
-        _repo.sendMessage(message);
+        _repo.sendMessage(uid, message);
       },
     );
   }

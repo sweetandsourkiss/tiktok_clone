@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
 import 'package:tiktok_clone/features/inbox/view_models/chat_room_view_model.dart';
 import 'package:tiktok_clone/features/inbox/views/chat_detail_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -28,15 +29,16 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
     );
   }
 
-  void _onChatTap(int index) {
+  void _onChatTap(String uid) {
     context.pushNamed(ChatDetailScreen.routeName, params: {
-      "chatId": "$index",
+      "chatId": uid,
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final asyncChatRooms = ref.watch(chatRoomProvider);
+    final userId = ref.read(authRepo).user!.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Direct Messages"),
@@ -66,23 +68,28 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
             ),
             itemCount: data.length,
             itemBuilder: (context, index) {
+              final isPersonA = userId == data[index].personAuid;
               return ListTile(
                 onLongPress: () {},
-                onTap: () => _onChatTap(index),
+                onTap: () => _onChatTap(data[index].uid),
                 leading: CircleAvatar(
                   radius: 30,
                   foregroundImage: NetworkImage(
-                    "https://firebasestorage.googleapis.com/v0/b/tiktok-sask-project.firebasestorage.app/o/avatars%2F${data[index].personAuid}?alt=media&token=a8f4c6f3-580f-4cb2-a598-a16a21f63d5b",
+                    "https://firebasestorage.googleapis.com/v0/b/tiktok-sask-project.firebasestorage.app/o/avatars%2F${isPersonA ? data[index].personBuid : data[index].personAuid}?alt=media&token=a8f4c6f3-580f-4cb2-a598-a16a21f63d5b",
                   ),
-                  child: const Text("새콤"),
+                  child: Text(isPersonA
+                      ? data[index].personBname
+                      : data[index].personAname),
                 ),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Text(
-                      'hello',
-                      style: TextStyle(
+                    Text(
+                      isPersonA
+                          ? data[index].personBname
+                          : data[index].personAname,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
