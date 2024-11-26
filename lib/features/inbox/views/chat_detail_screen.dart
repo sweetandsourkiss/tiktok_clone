@@ -29,13 +29,15 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     if (text == "") {
       return;
     }
-    ref.read(messagesProvider.notifier).sendMessage(widget.chatId, text);
+    ref
+        .read(messagesProvider(widget.chatId).notifier)
+        .sendMessage(widget.chatId, text);
     _editingController.text = "";
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(messagesProvider).isLoading;
+    final isLoading = ref.watch(messagesProvider(widget.chatId)).isLoading;
     final userId = ref.read(authRepo).user!.uid;
     return Scaffold(
       appBar: AppBar(
@@ -129,7 +131,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
       ),
       body: Stack(
         children: [
-          ref.watch(chatProvider).when(
+          ref.watch(chatProvider(widget.chatId)).when(
                 data: (data) {
                   return ListView.separated(
                     reverse: true,

@@ -6,11 +6,13 @@ import 'package:tiktok_clone/features/authentication/repos/authentication_repo.d
 import 'package:tiktok_clone/features/inbox/models/message_model.dart';
 import 'package:tiktok_clone/features/inbox/repos/messages_repo.dart';
 
-class MessagesViewModel extends AsyncNotifier<void> {
+class MessagesViewModel extends FamilyAsyncNotifier<void, String> {
   late final MessagesRepo _repo;
+  late final String chatRoomId;
   @override
-  FutureOr<void> build() {
+  FutureOr<void> build(String arg) {
     _repo = ref.read(messagesRepo);
+    chatRoomId = arg;
   }
 
   Future<void> sendMessage(String uid, String text) async {
@@ -29,16 +31,17 @@ class MessagesViewModel extends AsyncNotifier<void> {
   }
 }
 
-final messagesProvider = AsyncNotifierProvider<MessagesViewModel, void>(
+final messagesProvider =
+    AsyncNotifierProviderFamily<MessagesViewModel, void, String>(
   () => MessagesViewModel(),
 );
 
-final chatProvider = StreamProvider.autoDispose<List<MessageModel>>((ref) {
+final chatProvider = StreamProvider.family
+    .autoDispose<List<MessageModel>, String>((ref, chatRoomId) {
   final db = FirebaseFirestore.instance;
-
   return db
       .collection("chat_rooms")
-      .doc("SDQhTfzQOle6Ps8JzF36")
+      .doc(chatRoomId)
       .collection("texts")
       .orderBy("createdAt")
       .snapshots()
