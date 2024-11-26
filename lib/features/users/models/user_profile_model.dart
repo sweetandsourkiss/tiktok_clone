@@ -39,7 +39,7 @@ class UserProfileModel {
         name = json['name'],
         bio = json['bio'],
         link = json['link'],
-        hasAvatar = json['hasAvatar'];
+        hasAvatar = json['hasAvatar'] ?? false;
 
   UserProfileModel copyWith(
       {String? uid,

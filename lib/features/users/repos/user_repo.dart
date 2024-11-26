@@ -26,6 +26,13 @@ class UserRepository {
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     await _db.collection('users').doc(uid).update(data);
   }
+
+  Future<List<UserProfileModel>> getUsers() async {
+    final users = await _db.collection('users').get();
+    return users.docs
+        .map((doc) => UserProfileModel.fromJson(doc.data()))
+        .toList();
+  }
 }
 
 final userRepo = Provider(
