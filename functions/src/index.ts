@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
-export const onVideoCreated = functions.firestore.onDocumentCreated("videos/{videoId}", async (event) => {
+export const onVideoCreated = functions.firestore.onDocumentCreated("videos/{videoId}", async (event: any) => {
   const spawn = require("child-process-promise").spawn;
   const video = event.data!.data();
   await spawn("ffmpeg", [
@@ -30,7 +30,7 @@ export const onVideoCreated = functions.firestore.onDocumentCreated("videos/{vid
   });
 });
 
-export const onLikeCreated = functions.firestore.onDocumentCreated("likes/{likeId}", async (event) => {
+export const onLikeCreated = functions.firestore.onDocumentCreated("likes/{likeId}", async (event: any) => {
   const db = admin.firestore();
   const [videoId, userId] = event.params.likeId.split("000");
   await db
@@ -42,9 +42,27 @@ export const onLikeCreated = functions.firestore.onDocumentCreated("likes/{likeI
   db.collection("users").doc(userId).collection("likes").doc(videoId).set({
     createdAt: Date.now(),
   });
+  const video = await (await db.collection("videos").doc(videoId).get()).data();
+  if (video) {
+    const creatorUid = video.creatorUid;
+    const user = (await db.collection("users").doc(creatorUid).get()).data();
+    if (user) {
+      const token = user.token;
+      admin.messaging().send({
+        token: token,
+        data: {
+          screen: "123",
+        },
+        notification: {
+          title: "someone liked you video",
+          body: "Likes +1 ! Congrats! 💛",
+        },
+      });
+    }
+  }
 });
 
-export const onLikeRemoved = functions.firestore.onDocumentDeleted("likes/{likeId}", async (event) => {
+export const onLikeRemoved = functions.firestore.onDocumentDeleted("likes/{likeId}", async (event: any) => {
   const db = admin.firestore();
   const [videoId, userId] = event.params.likeId.split("000");
   await db

@@ -102,7 +102,6 @@ class _UsernameScreenState extends ConsumerState<UsernameScreen> {
               onTap: _onNextTap,
               child: FormButton(
                 disabled: _username.isEmpty,
-                text: "Next",
               ),
             ),
           ],

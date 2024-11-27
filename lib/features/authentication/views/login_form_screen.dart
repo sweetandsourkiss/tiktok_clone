@@ -105,7 +105,6 @@ class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
                   onTap: _onSubmitTap,
                   child: FormButton(
                     disabled: ref.watch(loginProvider).isLoading,
-                    text: "Log in",
                   ),
                 )
               ],

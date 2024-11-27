@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_clone/common/widgets/theme_config/theme_config.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/utilities.dart';
 
 class FormButton extends StatelessWidget {
   const FormButton({
     super.key,
     required this.disabled,
-    required this.text,
   });
   final bool disabled;
-  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class FormButton extends StatelessWidget {
             Sizes.size5,
           ),
           color: disabled
-              ? darkModeConfig.value
+              ? isDarkMode(context)
                   ? Colors.grey.shade800
                   : Colors.grey.shade300
               : Theme.of(context).primaryColor,
@@ -40,8 +39,8 @@ class FormButton extends StatelessWidget {
             color: disabled ? Colors.grey.shade400 : Colors.white,
             fontWeight: FontWeight.w600,
           ),
-          child: Text(
-            text,
+          child: const Text(
+            "Next",
             textAlign: TextAlign.center,
           ),
         ),

@@ -97,7 +97,6 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
               onTap: _onNextTap,
               child: FormButton(
                 disabled: ref.watch(signUpProvider).isLoading,
-                text: "Next",
               ),
             ),
           ],

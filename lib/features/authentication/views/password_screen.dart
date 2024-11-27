@@ -163,7 +163,6 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
                   onTap: _onSubmit,
                   child: FormButton(
                     disabled: !_isPasswordValid(),
-                    text: "Next",
                   ))
             ],
           ),

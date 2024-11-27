@@ -102,7 +102,7 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
                     ),
                   ],
                 ),
-                subtitle: const Text("Don't forget to make video"),
+                subtitle: Text(data[index].lastChat),
               );
             },
           );
